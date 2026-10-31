@@ -8,7 +8,7 @@
 // ============================================================================
 // When deploying the frontend to Netlify, paste your Google Cloud Run WebSocket URL here:
 // Example: 'wss://go-chat-backend-xyz-uc.a.run.app'
-export const PRODUCTION_BACKEND_WSS_URL = '';
+export const PRODUCTION_BACKEND_WSS_URL = 'wss://go-chat-k561.onrender.com';
 
 /**
  * Normalizes input URL to valid WebSocket protocol (ws:// or wss://)
