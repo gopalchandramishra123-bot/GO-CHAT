@@ -1,0 +1,7 @@
+{
+  "name": "GO-CHAT",
+  "description": "Room-based chatting platform featuring a responsive minimal UI, dark navy theme, live room switching, member panel, and multi-theme switcher.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+

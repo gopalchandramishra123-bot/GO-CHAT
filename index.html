@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GO-CHAT - Connect. Chat. Disconnect.</title>
+    <meta name="description" content="GO-CHAT - Modern, minimal room-based chatting website. Connect. Chat. Disconnect." />
+    <meta property="og:title" content="GO-CHAT - Connect. Chat. Disconnect." />
+    <meta property="og:description" content="Modern, minimal room-based chatting website. Ephemeral rooms, responsive interface, multiple color themes." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+
+    <!-- ======================================================================
+         1. WELCOME SCREEN
+         ====================================================================== -->
+    <div id="welcome-screen" class="view-container">
+      
+      <!-- Top Status & Server Config Bar -->
+      <div class="welcome-top-bar">
+        <button type="button" id="welcome-server-status-btn" class="server-status-pill connecting" title="Click to view/configure Signalling Server">
+          <span class="status-dot"></span>
+          <span id="welcome-server-status-text">Connecting...</span>
+        </button>
+      </div>
+
+      <div class="welcome-card">
+        
+        <!-- Brand Hero -->
+        <div class="brand-hero">
+          <div class="logo-badge" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+              <line x1="8" y1="9" x2="16" y2="9"></line>
+              <line x1="8" y1="13" x2="13" y2="13"></line>
+            </svg>
+          </div>
+          <h1 class="brand-title">GO-<span>CHAT</span></h1>
+          <p class="brand-subtitle">Connect. Chat. Disconnect.</p>
+        </div>
+
+        <!-- Join Room Form -->
+        <form id="join-form" novalidate>
+          
+          <!-- Validation Error Alert -->
+          <div id="form-error" class="error-banner hidden" role="alert">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="8" x2="12" y2="12"></line>
+              <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+            <span id="error-message">Please fill in required fields.</span>
+          </div>
+
+          <!-- Name Input -->
+          <div class="form-group">
+            <label for="user-name-input" class="form-label">Your Name</label>
+            <div class="input-wrapper">
+              <span class="input-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+              </span>
+              <input 
+                type="text" 
+                id="user-name-input" 
+                class="form-input" 
+                placeholder="e.g. Jordan Rivera" 
+                maxlength="25"
+                autocomplete="off"
+                required
+              />
+            </div>
+          </div>
+
+          <!-- Room Number Input -->
+          <div class="form-group">
+            <label for="room-number-input" class="form-label">Room Number</label>
+            <div class="input-wrapper">
+              <span class="input-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="4" y1="9" x2="20" y2="9"></line>
+                  <line x1="4" y1="15" x2="20" y2="15"></line>
+                  <line x1="10" y1="3" x2="8" y2="21"></line>
+                  <line x1="16" y1="3" x2="14" y2="21"></line>
+                </svg>
+              </span>
+              <input 
+                type="text" 
+                id="room-number-input" 
+                class="form-input tabular-nums" 
+                placeholder="e.g. 101 or Alpha" 
+                maxlength="16"
+                autocomplete="off"
+                required
+              />
+            </div>
+            
+            <!-- Quick room suggestions -->
+            <div class="quick-rooms">
+              <span>Quick pick:</span>
+              <button type="button" class="room-chip" data-room="101">#101</button>
+              <button type="button" class="room-chip" data-room="Lounge">#Lounge</button>
+              <button type="button" class="room-chip" data-room="Dev">#Dev</button>
+            </div>
+          </div>
+
+          <!-- Join Button -->
+          <button type="submit" id="join-btn" class="btn-primary">
+            <span>JOIN ROOM</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </button>
+        </form>
+
+        <!-- Welcome Theme Picker Swatches -->
+        <div class="welcome-theme-bar">
+          <span class="theme-bar-label">Color Theme</span>
+          <div class="theme-swatches" role="radiogroup" aria-label="Theme selection">
+            <button type="button" class="theme-swatch swatch-dark active" data-theme="dark" title="Dark Mode (Navy & Blue)" aria-label="Dark Mode"></button>
+            <button type="button" class="theme-swatch swatch-light-blue" data-theme="light-blue" title="Light Blue" aria-label="Light Blue"></button>
+            <button type="button" class="theme-swatch swatch-light-pink" data-theme="light-pink" title="Light Pink" aria-label="Light Pink"></button>
+            <button type="button" class="theme-swatch swatch-light-purple" data-theme="light-purple" title="Light Purple" aria-label="Light Purple"></button>
+            <button type="button" class="theme-swatch swatch-light-green" data-theme="light-green" title="Light Green" aria-label="Light Green"></button>
+          </div>
+        </div>
+
+        <!-- Micro Features Note -->
+        <div class="welcome-footer-notes">
+          <span>Real-Time P2P WebRTC</span>
+          <span>·</span>
+          <span>Ephemeral Rooms</span>
+          <span>·</span>
+          <span>No DB</span>
+        </div>
+
+        <!-- Developer Credit Tag -->
+        <div class="developer-badge-row">
+          <button type="button" id="open-about-dev-btn" class="developer-tag" title="About Developer">
+            <span style="color: var(--accent-primary);">⚡</span>
+            <span>Developed by <strong>Gopal Mishra</strong></span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+
+    <!-- ======================================================================
+         2. CHAT SCREEN
+         ====================================================================== -->
+    <div id="chat-screen" class="view-container hidden">
+      
+      <!-- Top Header Navigation -->
+      <header class="chat-header">
+        
+        <!-- Left: Mobile Menu + Branding + Room Tag -->
+        <div class="header-left">
+          <button id="toggle-members-btn" class="mobile-menu-btn" aria-label="Toggle online members">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </button>
+
+          <div class="header-brand">
+            <div class="header-brand-logo">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+              </svg>
+            </div>
+            <span class="header-brand-name">GO-<span>CHAT</span></span>
+          </div>
+
+          <div class="room-tag">
+            <span id="active-room-display" class="tabular-nums">#---</span>
+            <button id="copy-room-btn" class="copy-room-btn" title="Copy room ID">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Real Header Status Pill -->
+          <button type="button" id="header-server-status-btn" class="server-status-pill connecting" title="Click to view/configure Signalling Server">
+            <span class="status-dot"></span>
+            <span id="header-server-status-text">Connecting...</span>
+          </button>
+        </div>
+
+        <!-- Right: Theme Selector + Leave Room Button -->
+        <div class="header-right">
+          <div class="theme-select-wrapper">
+            <select id="header-theme-dropdown" class="theme-dropdown" aria-label="Select color theme">
+              <option value="dark">Dark Mode</option>
+              <option value="light-blue">Light Blue</option>
+              <option value="light-pink">Light Pink</option>
+              <option value="light-purple">Light Purple</option>
+              <option value="light-green">Light Green</option>
+            </select>
+            <span class="theme-dropdown-icon" aria-hidden="true">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </span>
+          </div>
+
+          <button id="leave-room-btn" class="btn-leave" title="Leave current room">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16 17 21 12 16 7"></polyline>
+              <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+            <span>Leave Room</span>
+          </button>
+        </div>
+
+      </header>
+
+      <!-- Chat Body (Sidebar + Message Area) -->
+      <div class="chat-body">
+        
+        <!-- Mobile Sidebar Overlay Backdrop -->
+        <div id="sidebar-overlay" class="sidebar-overlay"></div>
+
+        <!-- Online Members Sidebar -->
+        <aside id="members-sidebar" class="members-sidebar">
+          
+          <div class="sidebar-header">
+            <div class="sidebar-title-group">
+              <span class="sidebar-title">Online Members</span>
+              <span id="member-count-badge" class="member-counter tabular-nums">0</span>
+            </div>
+            <button id="sidebar-close-btn" class="sidebar-close-btn" aria-label="Close members sidebar">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Members List (Rendered dynamically by script.js from real server state) -->
+          <div id="members-list" class="members-list">
+            <!-- Dynamic member cards inserted here -->
+          </div>
+
+          <!-- Room Sharing Details in Sidebar -->
+          <div class="sidebar-room-info">
+            <p>
+              Invite others to Room <strong id="sidebar-room-number" class="tabular-nums">#---</strong> to chat in real-time.
+            </p>
+            <button type="button" id="sidebar-copy-btn" class="sidebar-copy-btn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+              </svg>
+              <span>Copy Room Code</span>
+            </button>
+
+            <!-- Dedicated Developer Attribution Card -->
+            <div id="sidebar-dev-card" class="sidebar-developer-card" title="About Developer">
+              <div class="dev-avatar">GM</div>
+              <div class="dev-info">
+                <span class="dev-name">Gopal Mishra</span>
+                <span class="dev-title">Developer · GO-CHAT</span>
+              </div>
+            </div>
+          </div>
+
+        </aside>
+
+        <!-- Chat Main Area -->
+        <main class="chat-main-area">
+
+          <!-- Live Session Bar -->
+          <div class="session-bar">
+            <div class="session-bar-info">
+              <span id="room-session-status">Room Connected</span>
+              <span class="channel-badge" id="p2p-badge">WebRTC P2P</span>
+            </div>
+            <button type="button" id="clear-chat-btn" class="room-chip" title="Clear current local chat view">
+              Clear Screen
+            </button>
+          </div>
+
+          <!-- Messages Container -->
+          <div id="messages-container" class="messages-container" role="log" aria-live="polite">
+            
+            <!-- Room Announcement Banner -->
+            <div class="room-welcome-banner">
+              <h2 id="room-welcome-title" class="room-welcome-title">Welcome to Room #---</h2>
+              <p id="room-welcome-text" class="room-welcome-text">Connected and ready. Send a message to start chatting.</p>
+            </div>
+
+            <!-- Messages rendered dynamically here -->
+
+          </div>
+
+          <!-- Chat Input Bar -->
+          <div class="chat-input-bar">
+            
+            <!-- Quick Emoji Reactions -->
+            <div class="quick-reactions">
+              <button type="button" class="reaction-chip" title="Thumbs up">👍</button>
+              <button type="button" class="reaction-chip" title="Wave">👋</button>
+              <button type="button" class="reaction-chip" title="Rocket">🚀</button>
+              <button type="button" class="reaction-chip" title="Fire">🔥</button>
+              <button type="button" class="reaction-chip" title="Party">🎉</button>
+              <button type="button" class="reaction-chip" title="Heart">❤️</button>
+            </div>
+
+            <!-- Message Form -->
+            <form id="message-form" class="message-form">
+              <div class="input-container">
+                <input 
+                  type="text" 
+                  id="message-input" 
+                  class="message-input" 
+                  placeholder="Type your message..." 
+                  autocomplete="off"
+                  required
+                />
+              </div>
+              <button type="submit" id="send-btn" class="btn-send" title="Send message (Enter)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="22" y1="2" x2="11" y2="13"></line>
+                  <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                </svg>
+              </button>
+            </form>
+
+          </div>
+
+        </main>
+
+      </div>
+
+    </div>
+
+    <!-- ======================================================================
+         3. SERVER SETTINGS MODAL
+         ====================================================================== -->
+    <div id="server-config-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 id="modal-title" class="modal-title">Signalling Server Settings</h3>
+          <button type="button" id="modal-close-btn" class="modal-close-btn" aria-label="Close modal">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>
+            GO-CHAT uses a WebSocket signalling server to establish WebRTC peer-to-peer data channels between browsers.
+          </p>
+          <div class="form-group">
+            <label for="server-url-input" class="form-label">WebSocket Signalling URL</label>
+            <input 
+              type="text" 
+              id="server-url-input" 
+              class="form-input" 
+              placeholder="wss://your-signalling-server.com"
+              autocomplete="off"
+            />
+            <span style="font-size: 0.725rem; color: var(--text-muted); display: block; margin-top: 0.35rem;">
+              Auto-detected in local/preview environments. When deployed to Netlify, enter your deployed server URL (e.g. on Render/Railway).
+            </span>
+          </div>
+          <div id="modal-server-status" style="font-size: 0.8rem; font-weight: 600; padding: 0.5rem 0.75rem; border-radius: 8px; background: var(--bg-tertiary); margin-top: 0.75rem;">
+            Status: Checking...
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button type="button" id="modal-reset-btn" class="btn-secondary">Reset to Default</button>
+          <button type="button" id="modal-save-btn" class="btn-primary" style="width: auto; padding: 0.65rem 1.25rem;">Save &amp; Reconnect</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======================================================================
+         4. ABOUT DEVELOPER MODAL
+         ====================================================================== -->
+    <div id="about-dev-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="dev-modal-title">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div style="display: flex; align-items: center; gap: 0.65rem;">
+            <div class="dev-avatar" style="width: 38px; height: 38px; font-size: 0.95rem;">GM</div>
+            <div>
+              <h3 id="dev-modal-title" class="modal-title" style="margin: 0; font-size: 1.15rem;">Gopal Mishra</h3>
+              <span style="font-size: 0.75rem; color: var(--accent-primary); font-weight: 700;">Lead Developer &amp; Architect</span>
+            </div>
+          </div>
+          <button type="button" id="dev-modal-close-btn" class="modal-close-btn" aria-label="Close modal">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>
+            <strong>GO-CHAT</strong> is built and engineered by <strong>Gopal Mishra</strong> — designed for secure, fast, room-based real-time communication.
+          </p>
+          <div style="display: flex; flex-direction: column; gap: 0.55rem; margin: 1rem 0; padding: 0.85rem; border-radius: 12px; background: var(--bg-tertiary); font-size: 0.8rem; line-height: 1.4;">
+            <div>⚡ <strong>Developer:</strong> Gopal Mishra</div>
+            <div>🌐 <strong>Architecture:</strong> WebRTC P2P Data Mesh + WebSocket Signalling</div>
+            <div>🔒 <strong>Privacy:</strong> Zero database storage, completely ephemeral in-memory sessions</div>
+            <div>🎨 <strong>UI/UX:</strong> Pure Vanilla JavaScript, HTML5 &amp; CSS3 with 5 customized themes</div>
+            <div>✨ <strong>Tagline:</strong> Connect. Chat. Disconnect.</div>
+          </div>
+          <p style="font-size: 0.775rem; color: var(--text-muted); margin: 0;">
+            Engineered with high-performance responsive standards for desktop, tablet, and mobile browsers.
+          </p>
+        </div>
+        <div class="modal-actions">
+          <button type="button" id="dev-modal-ok-btn" class="btn-primary" style="width: auto; padding: 0.6rem 1.25rem;">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Notification Element -->
+    <div id="toast-notice" class="toast-notice" role="status" aria-live="assertive"></div>
+
+    <!-- Script File -->
+    <script type="module" src="/script.js"></script>
+  </body>
+</html>
