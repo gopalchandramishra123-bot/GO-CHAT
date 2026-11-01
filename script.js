@@ -1061,14 +1061,20 @@ import { CONFIG, sanitizeWsUrl } from './config.js';
     }
 
     // Server Config Modal Events
+    
+    /* 
+    ........................................................................
     if (elements.welcomeStatusBtn) {
       elements.welcomeStatusBtn.addEventListener('click', openServerModal);
     }
 
     if (elements.headerStatusBtn) {
       elements.headerStatusBtn.addEventListener('click', openServerModal);
-    }
-
+    } 
+    
+    //THAT USE GOPAL ONLY WHEN YOU WANT SERVER Link  Through Run or TEST 
+    ......................................................................
+    */
     if (elements.modalCloseBtn) {
       elements.modalCloseBtn.addEventListener('click', closeServerModal);
     }
